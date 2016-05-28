@@ -1,0 +1,26 @@
+.btn-clone {
+  display: inline-block;
+  width: 120px;
+  height: 44px;
+  vertical-align: middle;
+  text-align: left;
+}
+.btn-clone i.icon.fa.fa-clone {
+  margin-right: 10px;
+}
+.input-clone {
+  display: none;
+  height: 30px;
+  width: calc(100% - 126px);
+  vertical-align: middle;
+}
+.input-clone.active {
+  display: inline-block;
+}
+
+.clone-message {
+  width: 100%;
+  height: 40px;
+  padding: 5px;
+  display: none;
+}
