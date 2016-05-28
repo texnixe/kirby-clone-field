@@ -25,6 +25,9 @@
       });
 
     });
+
+    $.fn.ajax(field, fieldname);
+
   };
 
   // Ajax function
