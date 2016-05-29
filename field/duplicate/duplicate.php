@@ -4,7 +4,7 @@
  * Clone Field for Kirby CMS (v. 2.3.0)
  *
  * @author    Sonja Broda - info@exniq.de
- * @version   0.7
+ * @version   0.8
  *
  */
 
@@ -52,7 +52,7 @@ class DuplicateField extends BaseField {
     return array(
       array(
         'pattern' => 'ajax/(:any)/(:any)/(:all)',
-        'method'  => 'get',
+        'method'  => 'GET',
         'action' => function($uid, $newID, $parent) {
 
           $site = kirby()->site();
@@ -99,16 +99,28 @@ class DuplicateField extends BaseField {
                 }
 
               }
-
               kirby()->trigger('panel.page.create', $newPage);
 
-              return 'The new page has been created' . ' <i class="icon fa fa-close"></i>';
+              $response = array(
+                'message' => 'The page was successfully created',
+                'class' => 'success'
+              );
+
+              return json_encode($response);
+              //return 'The new page has been created' . ' <i class="icon fa fa-close"></i>';
 
             } catch(Exception $e) {
 
-              return $e->getMessage();
+              $response = array(
+                'message' => $e->getMessage(),
+                'class' => 'error'
+              );
+
+
+              return json_encode($response);
 
             }
+
         }
       )
     );

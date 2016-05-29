@@ -1,3 +1,9 @@
+Version 0.8
+
+- change response handling
+- add success and error classes to messages
+- some code improvements
+
 Version 0.7
 
 - trigger panel.page.create hook

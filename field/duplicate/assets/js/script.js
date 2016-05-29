@@ -10,15 +10,17 @@
       			} else {
       				field.data( fieldname, true );
       			}
-      field.find('.btn-duplicate').click(function(e) {
-        $('.input-duplicate').val('');
-        field.find('.input-duplicate').toggleClass('active');
+
+      $('.btn-duplicate').click(function(e) {
+        $('.message-duplicate').hide().removeClass("success error");
+        $('.input-duplicate').val('').toggleClass('active');
+        //field.find('.input-duplicate').;
       });
 
-      field.find('.input-duplicate').keypress(function(e) {
+      $('.input-duplicate').keypress(function(e) {
         if (e.which == 13) {
           if($(this).val() == "") {
-            $('.message-duplicate').show().html('The field cannot be empty. Please enter a page title.')
+            $('.message-duplicate').show().html('The field cannot be empty. Please enter a page title.').addClass('error').append('<i class="icon fa fa-close"></i>')
             return false;
           }
           $.fn.ajax(fieldname);
@@ -26,11 +28,9 @@
         }
       });
 
-      field.find('.message-duplicate').on('click', '.fa-close', function(e){
-        $('.message-duplicate').hide();
+      $('.message-duplicate').on('click', '.fa-close', function(e){
+        $(this).parent().hide().removeClass("success error");
       });
-
-      $.fn.ajax(fieldname);
 
     });
 
@@ -49,8 +49,9 @@
     $.ajax({
       url: base_url + page + '/' + encodeURIComponent(newID) + '/' + parent,
       type: 'GET',
-      success: function(result) {
-        $('.message-duplicate').show().html(result);
+      success: function(response) {
+        var r = JSON.parse(response);
+        $('.message-duplicate').show().html(r.message).addClass(r.class).append('<i class="icon fa fa-close"></i>');
         $('.input-duplicate').removeClass('active');
       }
     });

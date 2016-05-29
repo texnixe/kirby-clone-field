@@ -21,6 +21,18 @@
 .message-duplicate {
   width: 100%;
   height: 40px;
-  padding: 5px;
+  padding: 4px 0;
   display: none;
+  line-height: 32px;
+}
+.message-duplicate.success {
+  color: #8dae28;
+}
+.message-duplicate.error {
+  color: #b3000a;
+}
+.message-duplicate i.icon.fa.fa-close {
+  padding-left: 10px;
+  display: inline-block;
+  vertical-align: middle;
 }
