@@ -4,14 +4,14 @@
  * Clone Field for Kirby CMS (v. 2.3.0)
  *
  * @author    Sonja Broda - info@exniq.de
- * @version   0.5
+ * @version   0.6
  *
  */
 
-class CloneField extends BaseField {
-  static public $fieldname = 'clone';
+class DuplicateField extends BaseField {
+  static public $fieldname = 'duplicate';
   static public $assets = array(
-    'js' => array(
+   'js' => array(
       'script.js',
     ),
     'css' => array(
@@ -20,16 +20,17 @@ class CloneField extends BaseField {
   );
 
   public function input() {
+    // Load template with arguments
     $site = kirby()->site();
     if(!$site->multilang() || ($site->multilang() && $site->language() == $site->defaultLanguage())) {
-
       $html = tpl::load( __DIR__ . DS . 'template.php', $data = array(
         'field' => $this,
         'page' => $this->page(),
+				'parent' => $this->page()->parent()->uri(),
+				'placeholder'  => $this->i18n($this->placeholder()),
+				'buttontext' => $this->i18n($this->buttontext()),
       ));
-
       return $html;
-
     } else {
       return false;
     }
@@ -50,9 +51,9 @@ class CloneField extends BaseField {
   public function routes() {
     return array(
       array(
-        'pattern' => 'ajax/(:any)/(:any)/(:any)',
+        'pattern' => 'ajax/(:any)/(:any)/(:all)',
         'method'  => 'get',
-        'action' => function($uid, $parent, $newID) {
+        'action' => function($uid, $newID, $parent) {
 
           $site = kirby()->site();
 
