@@ -6,9 +6,19 @@ This custom Kirby field allows you to clone a page in the panel.
 
 Put the field into `/site/fields`; create the folder if it does not exist yet.
 
-## In your blueprint
+Your structure should then look like this:
 
 ```
+site/
+  fields/
+    duplicate/
+      assets/
+        duplicate.php
+```
+
+## In your blueprint
+
+```yaml
 fields:
   clone:
     type: duplicate
@@ -22,7 +32,7 @@ You can provide a placeholder text and a buttontext. The examples above are the 
 
 This will create a button in your Panel form.
 
-## Use
+## Usage
 
 1. Click on the "Clone Page" button => an input field is shown.
 2. Enter the title of the new page into the input field and press `ENTER`.
@@ -31,6 +41,8 @@ This will create a button in your Panel form.
 ## Limitations
 
 - If you are on a multi-lingual installation, the field is only shown in the default language. It does, however, create a page in every available language.
+- The title entered into the input field will be used for all languages
+- If you use the `URL-key` field in multi-lingual installations, make sure to change the value of this field in your new pages to prevent errors.
 
 ## Author
 
