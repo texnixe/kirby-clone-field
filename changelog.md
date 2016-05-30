@@ -1,3 +1,11 @@
+Version 1.0
+
+- simplify code
+
+Version 0.9
+
+- copy all files to new page (not meta files, though)
+
 Version 0.8
 
 - change response handling

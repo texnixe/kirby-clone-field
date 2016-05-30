@@ -36,7 +36,7 @@ This will create a button in your Panel form.
 
 1. Click on the "Clone Page" button => an input field is shown.
 2. Enter the title of the new page into the input field and press `ENTER`.
-3. If all is well and the page does not exist yet, the new page is created.
+3. If all is well and the page does not exist yet, the new page is created and all files are copied to the new location.
 
 ## Limitations
 

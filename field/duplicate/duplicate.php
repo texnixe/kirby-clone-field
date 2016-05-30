@@ -4,7 +4,7 @@
  * Clone Field for Kirby CMS (v. 2.3.0)
  *
  * @author    Sonja Broda - info@exniq.de
- * @version   0.8
+ * @version   1.0
  *
  */
 
@@ -26,9 +26,8 @@ class DuplicateField extends BaseField {
       $html = tpl::load( __DIR__ . DS . 'template.php', $data = array(
         'field' => $this,
         'page' => $this->page(),
-				'parent' => $this->page()->parent()->uri(),
-				'placeholder'  => $this->i18n($this->placeholder()),
-				'buttontext' => $this->i18n($this->buttontext()),
+        'placeholder'  => $this->i18n($this->placeholder()),
+        'buttontext' => $this->i18n($this->buttontext()),
       ));
       return $html;
     } else {
@@ -46,43 +45,38 @@ class DuplicateField extends BaseField {
     return $element;
   }
 
+  public function getFiles($page) {
+    $files = $page->files();
+  }
+
 
   // Routes
   public function routes() {
     return array(
       array(
-        'pattern' => 'ajax/(:any)/(:any)/(:all)',
+        'pattern' => 'ajax/(:any)',
         'method'  => 'GET',
-        'action' => function($uid, $newID, $parent) {
+        'action' => function($newID) {
 
           $site = kirby()->site();
+          $page = $this->page();
+          $files = $this->page()->files();
 
-          if($parent === 'site') {
-
-            $p = page($uid);
-            $parent = $site;
-
-          } else {
-
-            $p = page($parent . '/' . $uid);
-            $parent = page($parent);
-
-          }
           if($site->multiLanguage()->bool()) {
 
-            $data = $p->content($site->defaultLanguage()->code())->toArray();
+            $data = $page->content($site->defaultLanguage()->code())->toArray();
             $data['title'] = urldecode($newID);
 
           } else {
 
-            $data = $p->content()->toArray();
+            $data = $page->content()->toArray();
             $data['title'] = urldecode($newID);
 
           }
 
           try {
 
-              $newPage = $parent->children()->create(str::slug(urldecode($newID)), $p->intendedTemplate(), $data);
+              $newPage = $page->parent()->children()->create(str::slug(urldecode($newID)), $page->intendedTemplate(), $data);
 
               if($site->multiLanguage()->bool()) {
 
@@ -90,7 +84,7 @@ class DuplicateField extends BaseField {
 
                   if($l !== $site->defaultLanguage()) {
 
-                    $data = $p->content($l->code())->toArray();
+                    $data = $page->content($l->code())->toArray();
                     $data['title'] = urldecode($newID);
                     $newPage->update($data, $l->code());
 
@@ -99,6 +93,11 @@ class DuplicateField extends BaseField {
                 }
 
               }
+              foreach($files as $file) {
+
+                $file->copy(kirby()->roots()->content() . '/' . $newPage->diruri() . "/" . $file->filename());
+              }
+
               kirby()->trigger('panel.page.create', $newPage);
 
               $response = array(
@@ -107,7 +106,7 @@ class DuplicateField extends BaseField {
               );
 
               return json_encode($response);
-              //return 'The new page has been created' . ' <i class="icon fa fa-close"></i>';
+
 
             } catch(Exception $e) {
 
@@ -115,7 +114,6 @@ class DuplicateField extends BaseField {
                 'message' => $e->getMessage(),
                 'class' => 'error'
               );
-
 
               return json_encode($response);
 

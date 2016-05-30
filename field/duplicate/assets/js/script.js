@@ -4,17 +4,9 @@
       var fieldname = 'duplicate';
       var field = $(this);
 
-
-      if(field.data( fieldname )) {
-      				return true;
-      			} else {
-      				field.data( fieldname, true );
-      			}
-
       $('.btn-duplicate').click(function(e) {
         $('.message-duplicate').hide().removeClass("success error");
         $('.input-duplicate').val('').toggleClass('active');
-        //field.find('.input-duplicate').;
       });
 
       $('.input-duplicate').keypress(function(e) {
@@ -39,15 +31,13 @@
 
   // Ajax function
   $.fn.ajax = function(fieldname) {
-    var page = $('[data-field="' + fieldname + '"]').find('.btn-duplicate').data('page');
-        parent = $('[data-field="' + fieldname + '"]').find('.btn-duplicate').data('parent');
-        newID = $('[data-field="' + fieldname + '"]').find('.input-duplicate').val();
+    var newID = $('[data-field="' + fieldname + '"]').find('.input-duplicate').val();
         newID = newID.replace(/[\/\\\)\($%^&*<>"'`´:;.\?=]/g, " ");
         blueprintKey = $('[data-field="' + fieldname + '"]').find('button').data('fieldname');
         base_url = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintKey + '/' + fieldname + '/ajax/';
-
+console.log(base_url + encodeURIComponent(newID));
     $.ajax({
-      url: base_url + page + '/' + encodeURIComponent(newID) + '/' + parent,
+      url: base_url + encodeURIComponent(newID),
       type: 'GET',
       success: function(response) {
         var r = JSON.parse(response);
