@@ -1,3 +1,6 @@
+Version 1.2
+- rewrite code base
+
 Version 1.1
 - add redirect to new page
 - improve code
