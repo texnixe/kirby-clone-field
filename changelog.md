@@ -1,3 +1,9 @@
+Version 1.1
+- add redirect to new page
+- improve code
+- add multilang support for meta files
+- fix some errors
+
 Version 1.0
 
 - simplify code
