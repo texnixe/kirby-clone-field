@@ -167,30 +167,54 @@ class DuplicateField extends BaseField {
 
     $slug = str::slug(urldecode($newID));
     $sourcePath = kirby()->roots->content() . DS . $this->page()->diruri();
-    $destPath = kirby()->roots->content() . DS . $this->page()->parent()->diruri() . DS . $slug;
+    $pathWithoutNumber = kirby()->roots->content() . DS . $this->page()->uri();
+    $destPath = kirby()->roots->content() . DS . $this->page()->parent()->diruri() . $slug;
 
-    if(!dir::copy($sourcePath, $destPath)) {
+    if($pathWithoutNumber === $destPath) {
+
       $response = array(
-        'message' => $e->getMessage(),
+        'message' => 'The page already exists',
         'class' => 'error'
       );
-    } else {
-      $newPage = new Page($this->page()->parent(), $slug);
 
-      // trigger hook for each page in the tree
-      foreach($newPage->index() as $p) {
-        kirby()->trigger('panel.page.create', $p);
-      }
-      $response = array(
-        'message' => 'The folder was successfully created. ',
-        'class' => 'success',
-        'uri' => $newPage->uri(),
-      );
+    } else {
+
+      if(!dir::copy($sourcePath, $destPath)) {
+        $response = array(
+          'message' => $e->getMessage(),
+          'class' => 'error'
+        );
+      } else {
+        $newPage = new Page($this->page()->parent(), $slug);
+
+
+
+        try {
+          $newPage->update(array(
+            'title' => urldecode($newID),
+          ));
+          // trigger hook for each page in the tree
+          foreach($newPage->index() as $p) {
+            kirby()->trigger('panel.page.create', $p);
+          }
+          $response = array(
+            'message' => 'The folder was successfully created.',
+            'class' => 'success',
+            'uri' => $newPage->uri(),
+          );
+        } catch(Exception $e) {
+
+          $response = array(
+            'message' => $e->getMessage(),
+            'class' => 'error'
+          );
+        }
     }
 
-    return $response;
-
   }
+
+  return $response;
+}
 
   // Routes
   public function routes() {
