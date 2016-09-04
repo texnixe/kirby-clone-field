@@ -8,7 +8,7 @@
           input = $('.input-duplicate');
 
 
-      btn.click(function(e) {
+      btn.click(function() {
         container.hide().removeClass("success error");
         input.val('').toggleClass('active');
       });
@@ -19,7 +19,7 @@
             container.show().html('The field cannot be empty. Please enter a page title.').addClass('error').append('<i class="icon fa fa-close"></i>')
             return false;
           }
-          $.fn.ajax(fieldname);
+          $.fn.ajaxDuplicate(fieldname);
           return false;
         }
       });
@@ -30,21 +30,20 @@
 
     });
 
-
   };
 
   // Ajax function
-  $.fn.ajax = function(fieldname) {
+  $.fn.ajaxDuplicate = function(fieldname) {
     var newID = $('[data-field="' + fieldname + '"]').find('.input-duplicate').val();
-        newID = newID.replace(/[\/\\\)\($%^&*<>"'`´:;.\?=]/g, " ");
-        blueprintKey = $('[data-field="' + fieldname + '"]').find('button').data('fieldname');
-        base_url = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintKey + '/' + fieldname + '/ajax/';
+    var newID = newID.replace(/[\/\\\)\($%^&*<>"'`´:;.\?=]/g, " ");
+    var blueprintKey = $('[data-field="' + fieldname + '"]').find('button').data('fieldname');
+    var base_url = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintKey + '/' + fieldname + '/api/duplicate/';
+
     $.ajax({
       url: base_url + encodeURIComponent(newID),
       type: 'GET',
       success: function(response) {
         var r = JSON.parse(response);
-
         if(r.class == 'error') {
           container.show().html(r.message).addClass(r.class).append('<i class="icon fa fa-close"></i>');
           input.removeClass('active');
@@ -56,10 +55,11 @@
           container.append('You will be redirected to the new page ...')
           setTimeout(function () {
               window.location.replace(new_url);
-          }, 2500);
+          }, 2000);
 
         }
       }
     });
   };
+
 })(jQuery);
