@@ -58,8 +58,8 @@ class DuplicateField extends BaseField {
   public function getData($lang = null) {
     $site = kirby()->site();
     if($site->multilang()) {
-      $lDefaultCode = $site->defaultLanguage()->code();
-      return $this->page()->content($lDefaultCode)->toArray();
+      $dLangCode = $site->defaultLanguage()->code();
+      return $this->page()->content($dLangCode)->toArray();
     } if(is_string($lang)) {
       return $this->page()->content($lang)->toArray();
     } else {
@@ -70,12 +70,12 @@ class DuplicateField extends BaseField {
 
   public function updatePage($newPage, $newID) {
     $site = kirby()->site();
-    foreach($site->languages() as $l) {
-      if($l !== $site->defaultLanguage()) {
-        $data = $this->getData($l->code());
+    foreach($site->languages() as $lang) {
+      if($lang !== $site->defaultLanguage()) {
+        $data = $this->getData($lang->code());
         $data['title'] = urldecode($newID);
         try {
-          $newPage->update($data, $l->code());
+          $newPage->update($data, $lang->code());
           return true;
         } catch(Exception $e) {
           return false;
@@ -168,7 +168,11 @@ class DuplicateField extends BaseField {
     $slug = str::slug(urldecode($newID));
     $sourcePath = kirby()->roots->content() . DS . $this->page()->diruri();
     $pathWithoutNumber = kirby()->roots->content() . DS . $this->page()->uri();
-    $destPath = kirby()->roots->content() . DS . $this->page()->parent()->diruri() . $slug;
+    if($this->page()->parents()->count() > 0) {
+      $destPath = kirby()->roots->content() . DS . $this->page()->parent()->diruri() . DS . $slug;
+    } else {
+      $destPath = kirby()->roots->content() . DS . $slug;
+    }
 
     if($pathWithoutNumber === $destPath) {
 
