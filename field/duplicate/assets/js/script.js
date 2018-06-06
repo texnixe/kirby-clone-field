@@ -52,7 +52,7 @@
 
         if(r.class == 'success' && r.uri) {
           container.show().html(r.message).addClass(r.class);
-          new_url = window.location.href.replace(/(pages\/.*\/edit.*)/g, 'pages/' + r.uri + '/edit/');
+          new_url = window.location.href.replace(/(pages\/.*\/edit.*)/g, 'pages/' + r.uri + '/edit');
           container.append('You will be redirected to the new page ...')
           setTimeout(function () {
               window.location.replace(new_url);
